@@ -1,24 +1,25 @@
-package com.join.enent;
+package com.join.event;
 
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @author z1aoyu 2025-03-11
+ * @author z1aoyu 2024-11-13
  */
 @Slf4j
+@MapperScan(basePackages = {"com.join.event.mapper"})
 @SpringCloudApplication
-@ComponentScan(basePackages = {"com.join.enent"})
-public class JoinApplication {
+public class JoinEventApplication {
+
     public static void main(String[] args) throws UnknownHostException {
-        SpringApplication app = new SpringApplication(JoinApplication.class);
+        SpringApplication app = new SpringApplication(JoinEventApplication.class);
         ConfigurableApplicationContext application = app.run(args);
         Environment env = application.getEnvironment();
         log.info("\n-------------------------服务启动成功---------------------------------\n\t" +
