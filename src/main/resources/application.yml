@@ -1,0 +1,109 @@
+server:
+  port: 7001
+
+
+spring:
+  application:
+    name: join
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true #重试机制开关
+  profiles:
+    active: '@profileActive@'
+  main:        # 设置 为true ,即 允许 同名
+    allow-bean-definition-overriding: true
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+logging:
+  config: classpath:logback-spring.xml
+knife4j:
+  enable: true
+  openapi:
+    title: smart-运营后台接口文档
+    description: "api文档"
+    email: z1aoyu@gmail.com
+    concat: 粥粥
+    version: v1.0.0
+  production: false
+  setting:
+    custom-code: 500
+    enable-footer-custom: false
+    language: zh_cn
+    enable-footer: true
+    enable-debug: true
+    enable-open-api: true
+    enable-host: false
+  basic:
+    enable: false
+    username: sbsbsbsb
+    password: 123
+
+swagger:
+  enabled: true
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml,classpath:mapper/*/*.xml
+  type-aliases-package: com.dynamic.backstage
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
+ribbon:
+  connectTimeout: 50000  #http建立socket超时时间,毫秒
+  ReadTimeout: 50000   #http读取响应socket超时时间
+  MaxAutoRetries: 1   #同一台实例最大重试次数,不包括首次调用
+  MaxAutoRetriesNextServer: 2 #重试负载均衡其他的实例最大重试次数,不包括首次server
+  OkToRetryOnAllOperations: false   #是否所有操作都重试，POST请求注意多次提交错误。默认true，设定为false的话，只有get请求会重试
+
+
+feign:
+  hystrix:
+    enabled: true #是否熔断,默认false
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000  #断路器线程池超时时间,毫秒
+
+idworker:
+  snowflake:
+    workerId: 1 #工作机器ID(0~31)
+
+#jwt
+jwtsecurity:
+  secret: sbsbsb
+
+#接口访问频次限制
+request:
+  open: false #开关
+  millisecond: 50 #毫秒内只允许访问一次
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #actuator 开启访问权限
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+
+
+# 线程池配置
+threadpoolproperty:
+  corePoolSize: 4
+  maxPoolSize: 8
+  keepAliveSeconds: 60
+  queueCapacity: 100
+  threadNamePrefix: smart-ThreadPoolExecutor-
+  rejectedExecutionHandler:  1
