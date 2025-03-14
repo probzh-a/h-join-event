@@ -45,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (null == user) {
             //首次登录
 
-            User newUser =  JsonUtils.toObject(JSONU,User.class);
+//            User newUser =  JsonUtils.toObject(JSONU,User.class);
             user.setCreatedTime(LocalDateTime.now());
             user.setAuthority(AuthorityEnum.NORMAL.getCode());
         } else {
