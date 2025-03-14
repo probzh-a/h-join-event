@@ -1,8 +1,9 @@
 package com.join.event.config.idFactory;
 
 import cn.hutool.core.date.SystemClock;
-import com.hw.oms.core.idFactory.config.Snowflake;
-import com.hw.util.error.HwServiceRunException;
+import com.join.event.bean.enums.BaseStatusCodeEnum;
+import com.join.event.config.exception.define.ServiceException;
+import com.join.event.config.idFactory.config.Snowflake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,7 @@ public class SnowflakeId implements Idworker {
             if (lastTimestampBak - SystemClock.now() / 1000 <= BACK_TIME_MAX) {
                 timestamp = lastTimestampBak;
             } else {
-                throw new HwServiceRunException(String.format("时钟回拨: now: [%d] last: [%d]", timestamp, lastTimestampBak));
+                throw new ServiceException(BaseStatusCodeEnum.B000001,String.format("时钟回拨: now: [%d] last: [%d]", timestamp, lastTimestampBak));
             }
         }
 
