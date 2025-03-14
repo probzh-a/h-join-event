@@ -38,10 +38,7 @@ knife4j:
     enable-debug: true
     enable-open-api: true
     enable-host: false
-  basic:
-    enable: false
-    username: join-event
-    password: 123
+
 
 swagger:
   enabled: true
@@ -57,28 +54,10 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 
 
-feign:
-  hystrix:
-    enabled: true #是否熔断,默认false
-
 idworker:
   snowflake:
     workerId: 1 #工作机器ID(0~31)
 
-
-#jwt
-jwtsecurity:
-  secret: join-event
-
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*" #actuator 开启访问权限
-  endpoint:
-    health:
-      show-details: ALWAYS
 
 
 

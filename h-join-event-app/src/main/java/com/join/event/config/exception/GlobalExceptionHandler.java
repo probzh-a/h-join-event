@@ -1,7 +1,6 @@
 package com.join.event.config.exception;
 
 
-import com.google.common.collect.Lists;
 import com.join.event.bean.common.BaseResDto;
 import com.join.event.bean.constant.ServerEnvConstants;
 import com.join.event.bean.enums.BaseStatusCodeEnum;
@@ -18,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.OK)
     public BaseResDto<Object> ArgumentExceptionHandler(MethodArgumentNotValidException e) {
-        List<InvalidDto> invalids = Lists.newArrayList();
+        List<InvalidDto> invalids = new ArrayList<>();
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             InvalidDto invalid = new InvalidDto();
             if (Boolean.FALSE.equals(fieldError.getRejectedValue())) {

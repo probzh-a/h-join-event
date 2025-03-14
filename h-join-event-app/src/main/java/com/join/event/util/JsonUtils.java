@@ -24,7 +24,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -173,11 +172,12 @@ public class JsonUtils {
     public static <T> List<T> toListOfObject(String json, Class<T> clazz, ObjectMapper om) {
         try {
             @SuppressWarnings("unchecked") Class<T[]> arrayClass = (Class<T[]>) Class.forName("[L" + clazz.getName() + ";");
-            return Lists.newArrayList(om.readValue(json, arrayClass));
-        } catch (IOException | ClassNotFoundException e) {
-            log.error("json={}, clazz={}", json, clazz, e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+//            return Lists.newArrayList(om.readValue(json, arrayClass));
+            return null;
+
     }
 
     /**
