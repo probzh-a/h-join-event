@@ -42,36 +42,6 @@
     </appender>
 
 
-    <springProfile name="test,gray,prod">
-        <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-            <!-- 这是是logstash服务器地址 端口-->
-            <destination>192.168.171.213:8888</destination>
-            <!-- 保活探测 -->
-            <keepAliveDuration>5 minutes</keepAliveDuration>
-            <!--输出的格式，推荐使用这个-->
-            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-                <providers>
-                    <pattern>
-                        <pattern>
-                            {
-                            "environment":"${profileActive}",
-                            "server":"${appName}",
-                            "create_time": "%d{yyyy-MM-dd HH:mm:ss.SSS}",
-                            "thread": "%thread",
-                            "log_level": "%-5level",
-                            "log_code_address": "%logger{96} %line",
-                            "path":"%X{path}",
-                            "elapsed":"%X{elapsed}",
-                            "exceptionFirstLine": "%ex{0}",
-                            "message":"%msg%n %rEx%n"
-                            }
-                        </pattern>
-                    </pattern>
-                </providers>
-            </encoder>
-        </appender>
-    </springProfile>
-
     <springProfile name="dev">
         <logger name="com.dynamic.join-event" level="DEBUG" additivity="false">
             <appender-ref ref="STDOUT"/>
