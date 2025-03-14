@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-@ConfigurationProperties(prefix = "idwork.snowflake")
+@ConfigurationProperties(prefix = "idworker.snowflake")
 @Data
 public class Snowflake {
     /**
