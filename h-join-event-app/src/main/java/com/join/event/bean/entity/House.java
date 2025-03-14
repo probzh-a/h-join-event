@@ -1,4 +1,4 @@
-package com.join.event.entity;
+package com.join.event.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 用户喜欢与邀请记录表
+ * 房间表
  * </p>
  *
  * @author ljh
@@ -22,32 +22,29 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user_like")
-@ApiModel(value="UserLike对象", description="用户喜欢与邀请记录表")
-public class UserLike implements Serializable {
+@TableName("house")
+@ApiModel(value="House对象", description="房间表")
+public class House implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "发起人")
-    private Long userId;
-
-    @ApiModelProperty(value = "接受人")
-    private Long toUserId;
-
     @ApiModelProperty(value = "房间号")
     private Long number;
 
-    @ApiModelProperty(value = "0-喜欢 1-邀请")
+    @ApiModelProperty(value = "房主")
+    private Long houseOwner;
+
+    @ApiModelProperty(value = "房间名称")
+    private String name;
+
+    @ApiModelProperty(value = "房间类型")
     private Integer type;
 
-    @ApiModelProperty(value = "是否接受 0-否 1-是")
-    private Integer isAccept;
-
-    @ApiModelProperty(value = "留言/备注")
-    private String message;
+    @ApiModelProperty(value = "预定活动人数")
+    private Long personNum;
 
     @ApiModelProperty(value = "创建人")
     private Long createdUser;

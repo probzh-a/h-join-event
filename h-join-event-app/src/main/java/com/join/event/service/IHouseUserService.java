@@ -1,6 +1,6 @@
 package com.join.event.service;
 
-import com.join.event.entity.HouseUser;
+import com.join.event.bean.entity.HouseUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

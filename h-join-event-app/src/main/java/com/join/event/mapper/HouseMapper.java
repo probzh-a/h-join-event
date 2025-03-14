@@ -1,6 +1,6 @@
 package com.join.event.mapper;
 
-import com.join.event.entity.House;
+import com.join.event.bean.entity.House;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

@@ -1,6 +1,6 @@
 package com.join.event.service.impl;
 
-import com.join.event.entity.House;
+import com.join.event.bean.entity.House;
 import com.join.event.mapper.HouseMapper;
 import com.join.event.service.IHouseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

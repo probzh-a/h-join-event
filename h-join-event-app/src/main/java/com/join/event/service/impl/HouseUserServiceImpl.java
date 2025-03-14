@@ -1,6 +1,6 @@
 package com.join.event.service.impl;
 
-import com.join.event.entity.HouseUser;
+import com.join.event.bean.entity.HouseUser;
 import com.join.event.mapper.HouseUserMapper;
 import com.join.event.service.IHouseUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

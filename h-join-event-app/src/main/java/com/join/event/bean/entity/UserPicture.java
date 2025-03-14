@@ -1,4 +1,4 @@
-package com.join.event.entity;
+package com.join.event.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 房间用户表
+ * 用户照片表
  * </p>
  *
  * @author ljh
@@ -22,20 +22,23 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("house_user")
-@ApiModel(value="HouseUser对象", description="房间用户表")
-public class HouseUser implements Serializable {
+@TableName("user_picture")
+@ApiModel(value="UserPicture对象", description="用户照片表")
+public class UserPicture implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "房间id")
-    private Long houseId;
-
     @ApiModelProperty(value = "用户id")
     private Long userId;
+
+    @ApiModelProperty(value = "地址")
+    private String pictureUrl;
+
+    @ApiModelProperty(value = "排序")
+    private Integer sort;
 
     @ApiModelProperty(value = "创建人")
     private Long createdUser;

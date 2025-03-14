@@ -1,4 +1,4 @@
-package com.join.event.entity;
+package com.join.event.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -32,20 +32,32 @@ public class User implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @ApiModelProperty(value = "用户微信登录唯一标识")
+    private String openId;
+
+    @ApiModelProperty(value = "微信头像地址")
+    private String avatar;
+
     @ApiModelProperty(value = "用户名")
     private String name;
 
-    @ApiModelProperty(value = "性别 0-男 1-女")
+    @ApiModelProperty(value = "手机号")
+    private String phone;
+
+    @ApiModelProperty(value = "性别 0-未知 1-男性 2-女性")
     private Integer gender;
 
+    @ApiModelProperty(value = "是否在线 0-否 1-是")
+    private Boolean isOnline;
+
     @ApiModelProperty(value = "是否实名认证 0-否 1-是")
-    private Integer isReal;
+    private Boolean isReal;
 
     @ApiModelProperty(value = "是否vip 0-否 1-是")
-    private Integer isVip;
+    private Boolean isVip;
 
-    @ApiModelProperty(value = "是否局头 0-否 1-是")
-    private Integer isHead;
+    @ApiModelProperty(value = "用户枚举类型")
+    private Integer authority;
 
     @ApiModelProperty(value = "评价等级")
     private Integer level;

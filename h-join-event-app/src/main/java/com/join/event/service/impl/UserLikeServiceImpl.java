@@ -1,6 +1,6 @@
 package com.join.event.service.impl;
 
-import com.join.event.entity.UserLike;
+import com.join.event.bean.entity.UserLike;
 import com.join.event.mapper.UserLikeMapper;
 import com.join.event.service.IUserLikeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
