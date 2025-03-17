@@ -2,23 +2,25 @@ package com.join.event.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.join.event.bean.dto.req.UserPageReq;
 import com.join.event.bean.dto.req.UserLoginReq;
 import com.join.event.bean.dto.res.UserInfoRes;
+import com.join.event.bean.dto.res.UserPageRes;
+import com.join.event.bean.entity.HouseUser;
 import com.join.event.bean.entity.User;
 import com.join.event.bean.enums.AuthorityEnum;
 import com.join.event.bean.enums.BaseStatusCodeEnum;
 import com.join.event.config.exception.define.ServiceException;
 import com.join.event.config.idFactory.Idworker;
+import com.join.event.mapper.HouseUserMapper;
 import com.join.event.mapper.UserMapper;
 import com.join.event.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.join.event.util.JsonUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -33,6 +35,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Resource
     UserMapper userMapper;
+    @Resource
+    HouseUserMapper houseUserMapper;
     @Resource
     Idworker idWorker;
 
@@ -57,5 +61,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         } else {
             return BeanUtil.copyProperties(user, UserInfoRes.class);
         }
+    }
+
+    @Override
+    public UserPageRes myPage(UserPageReq userPageReq) {
+        UserPageRes userPageRes = new UserPageRes();
+
+        Long userId = userPageReq.getUserId();
+        User user = userMapper.selectById(userId);
+        BeanUtil.copyProperties(user, userPageRes);
+        return userPageRes;
     }
 }

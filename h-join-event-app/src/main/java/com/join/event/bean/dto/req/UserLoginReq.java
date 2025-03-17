@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * <p>
  *
@@ -17,6 +19,7 @@ import lombok.Data;
 public class UserLoginReq {
 
     @ApiModelProperty("用户微信登录唯一标识")
+    @NotNull
     private String openId;
 
     @ApiModelProperty("微信头像地址")

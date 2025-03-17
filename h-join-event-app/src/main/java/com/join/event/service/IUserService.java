@@ -1,7 +1,9 @@
 package com.join.event.service;
 
+import com.join.event.bean.dto.req.UserPageReq;
 import com.join.event.bean.dto.req.UserLoginReq;
 import com.join.event.bean.dto.res.UserInfoRes;
+import com.join.event.bean.dto.res.UserPageRes;
 import com.join.event.bean.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,4 +18,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IUserService extends IService<User> {
 
     UserInfoRes login(UserLoginReq userLoginReq);
+
+    UserPageRes myPage(UserPageReq userPageReq);
 }

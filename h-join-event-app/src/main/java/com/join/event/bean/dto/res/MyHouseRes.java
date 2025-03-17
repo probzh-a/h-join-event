@@ -1,36 +1,24 @@
-package com.join.event.bean.entity;
-
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.time.LocalDateTime;
-import java.io.Serializable;
+package com.join.event.bean.dto.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
- * 房间表
+ *
  * </p>
  *
  * @author ljh
- * @since 2025-03-14
+ * @since 2025/3/17
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("house")
-@ApiModel(value = "House对象", description = "房间表")
-public class House implements Serializable {
+@ApiModel("用户活动列表")
+public class MyHouseRes {
 
-    private static final long serialVersionUID = 1L;
-
-    @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty("用户活动id")
     private Long id;
 
     @ApiModelProperty(value = "房间号")
@@ -44,6 +32,9 @@ public class House implements Serializable {
 
     @ApiModelProperty(value = "房间类型")
     private Integer type;
+
+    @ApiModelProperty(value = "活动状态 0-未开始 1-进行中 2-已结束")
+    private Integer actStatus;
 
     @ApiModelProperty(value = "活动开始时间")
     private LocalDateTime startTime;
@@ -68,6 +59,4 @@ public class House implements Serializable {
 
     @ApiModelProperty(value = "是否删除：(1：已删除，0：未删除)")
     private Boolean deleteStatus;
-
-
 }
