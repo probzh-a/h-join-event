@@ -2,6 +2,7 @@ package com.join.event.service;
 
 import com.join.event.bean.dto.req.UserPageReq;
 import com.join.event.bean.dto.req.UserLoginReq;
+import com.join.event.bean.dto.req.UserUpdateReq;
 import com.join.event.bean.dto.res.UserInfoRes;
 import com.join.event.bean.dto.res.UserPageRes;
 import com.join.event.bean.entity.User;
@@ -20,4 +21,6 @@ public interface IUserService extends IService<User> {
     UserInfoRes login(UserLoginReq userLoginReq);
 
     UserPageRes myPage(UserPageReq userPageReq);
+
+    void updateUserInfo(UserUpdateReq userUpdateReq);
 }

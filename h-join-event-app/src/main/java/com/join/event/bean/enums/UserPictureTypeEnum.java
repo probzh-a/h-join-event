@@ -9,15 +9,15 @@ import java.util.Arrays;
 
 
 /**
- * 用户角色分类枚举
+ * 用户照片枚举
  */
 @Getter
 @AllArgsConstructor
-public enum AuthorityEnum implements EnumAncestor<Integer> {
+public enum UserPictureTypeEnum implements EnumAncestor<Integer> {
 
-    NORMAL(0, "普通用户"),
-    HEADER(1, "局头"),
-    ADMIN(2, "管理员"),
+    AVATAR(0, "头像"),
+    NORMAL(1, "普通照片"),
+    HOME_PAGE(2, "主页展示照片")
     ;
 
     @JsonValue
@@ -29,7 +29,7 @@ public enum AuthorityEnum implements EnumAncestor<Integer> {
      * 获取code对应的枚举
      */
     @JsonCreator
-    public static AuthorityEnum of(Integer code) {
+    public static UserPictureTypeEnum of(Integer code) {
         return Arrays.stream(values()).filter(anEnum -> anEnum.getCode().equals(code)).findFirst().orElse(null);
     }
 

@@ -4,6 +4,7 @@ package com.join.event.controller;
 import com.join.event.bean.common.BaseResDto;
 import com.join.event.bean.dto.req.UserPageReq;
 import com.join.event.bean.dto.req.UserLoginReq;
+import com.join.event.bean.dto.req.UserUpdateReq;
 import com.join.event.bean.dto.res.UserInfoRes;
 import com.join.event.bean.dto.res.UserPageRes;
 import com.join.event.service.IUserService;
@@ -37,6 +38,13 @@ public class UserController {
     @ApiOperation("登录并获取个人基础信息")
     public BaseResDto<UserInfoRes> login(@RequestBody UserLoginReq userLoginReq) {
         return new BaseResDto<>(userService.login(userLoginReq));
+    }
+
+    @PostMapping("/updateUserInfo")
+    @ApiOperation("编辑个人信息")
+    public BaseResDto<String> updateUserInfo(@RequestBody UserUpdateReq userUpdateReq) {
+        userService.updateUserInfo(userUpdateReq);
+        return new BaseResDto<>("编辑成功");
     }
 
     @PostMapping("/myPage")

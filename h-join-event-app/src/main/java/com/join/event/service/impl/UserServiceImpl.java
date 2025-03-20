@@ -1,25 +1,32 @@
 package com.join.event.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.join.event.bean.dto.req.UserPageReq;
 import com.join.event.bean.dto.req.UserLoginReq;
+import com.join.event.bean.dto.req.UserPictureReq;
+import com.join.event.bean.dto.req.UserUpdateReq;
 import com.join.event.bean.dto.res.UserInfoRes;
 import com.join.event.bean.dto.res.UserPageRes;
-import com.join.event.bean.entity.HouseUser;
 import com.join.event.bean.entity.User;
+import com.join.event.bean.entity.UserPicture;
 import com.join.event.bean.enums.AuthorityEnum;
 import com.join.event.bean.enums.BaseStatusCodeEnum;
+import com.join.event.bean.enums.UserPictureTypeEnum;
 import com.join.event.config.exception.define.ServiceException;
 import com.join.event.config.idFactory.Idworker;
-import com.join.event.mapper.HouseUserMapper;
 import com.join.event.mapper.UserMapper;
+import com.join.event.mapper.UserPictureMapper;
 import com.join.event.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,9 +43,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     UserMapper userMapper;
     @Resource
-    HouseUserMapper houseUserMapper;
-    @Resource
     Idworker idWorker;
+    @Resource
+    UserPictureMapper userPictureMapper;
+    @Resource
+    TransactionTemplate transactionTemplate;
 
     @Override
     public UserInfoRes login(UserLoginReq userLoginReq) {
@@ -71,5 +80,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectById(userId);
         BeanUtil.copyProperties(user, userPageRes);
         return userPageRes;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserInfo(UserUpdateReq userUpdateReq) {
+        User user = BeanUtil.copyProperties(userUpdateReq, User.class);
+        user.setUpdatedTime(LocalDateTime.now());
+
+        List<UserPicture> userPicturesSave = new ArrayList<>();
+
+        LambdaQueryWrapper<UserPicture> userPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userPictureLambdaQueryWrapper.eq(UserPicture::getUserId, userUpdateReq.getId());
+        userPictureMapper.delete(userPictureLambdaQueryWrapper);
+
+        List<UserPictureReq> userPictureReqs = userUpdateReq.getUserPictureReqs();
+        if (CollectionUtil.isNotEmpty(userPictureReqs)) {
+            for (UserPictureReq userPictureReq : userPictureReqs) {
+                UserPicture userPicture = BeanUtil.copyProperties(userPictureReq, UserPicture.class);
+                if (0 == userPicture.getSort()) {
+                    userPicture.setType(UserPictureTypeEnum.AVATAR.getCode());
+                } else {
+                    userPicture.setType(UserPictureTypeEnum.NORMAL.getCode());
+                }
+                userPicture.setId(idWorker.nextId());
+                userPicture.setUserId(userUpdateReq.getId());
+                userPicture.setUserId(userPicture.getUserId());
+                userPicture.setCreatedTime(LocalDateTime.now());
+                userPicturesSave.add(userPicture);
+            }
+        }
+        userMapper.updateById(user);
+        if (CollectionUtil.isNotEmpty(userPicturesSave)) {
+            userPictureMapper.batchInsert(userPicturesSave);
+        }
     }
 }

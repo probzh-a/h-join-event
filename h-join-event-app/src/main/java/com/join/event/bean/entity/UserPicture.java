@@ -3,8 +3,10 @@ package com.join.event.bean.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,7 +25,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("user_picture")
-@ApiModel(value="UserPicture对象", description="用户照片表")
+@ApiModel(value = "UserPicture对象", description = "用户照片表")
 public class UserPicture implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,6 +41,9 @@ public class UserPicture implements Serializable {
 
     @ApiModelProperty(value = "排序")
     private Integer sort;
+
+    @ApiModelProperty(value = "照片类型 0-头像 1-普通照片 2-主页展示照片")
+    private Integer type;
 
     @ApiModelProperty(value = "创建人")
     private Long createdUser;

@@ -2,4 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.join.event.mapper.UserPictureMapper">
 
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO user_picture (user_id, picture_url, sort, type, created_user, updated_user, created_time,
+        updated_time, delete_status)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.pictureUrl}, #{item.sort}, #{item.type}, #{item.createdUser}, #{item.updatedUser},
+            #{item.createdTime}, #{item.updatedTime}, #{item.deleteStatus})
+        </foreach>
+    </insert>
+
 </mapper>

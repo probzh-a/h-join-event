@@ -22,6 +22,6 @@ public class MyHouseReq {
     private Long userId;
 
     @NotNull
-    @ApiModelProperty("我的房间 0-否 1-是")
+    @ApiModelProperty("我创建的房间 0-否 1-是")
     private Boolean isMyRoom;
 }
