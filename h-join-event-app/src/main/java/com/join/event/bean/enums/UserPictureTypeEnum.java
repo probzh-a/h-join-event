@@ -17,7 +17,8 @@ public enum UserPictureTypeEnum implements EnumAncestor<Integer> {
 
     AVATAR(0, "头像"),
     NORMAL(1, "普通照片"),
-    HOME_PAGE(2, "主页展示照片")
+    HOME_PAGE(2, "主页展示照片"),
+    BACK_GROUND(3, "背景照片")
     ;
 
     @JsonValue

@@ -3,12 +3,11 @@ package com.join.event.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.join.event.bean.dto.req.UserPageReq;
-import com.join.event.bean.dto.req.UserLoginReq;
-import com.join.event.bean.dto.req.UserPictureReq;
-import com.join.event.bean.dto.req.UserUpdateReq;
+import com.join.event.bean.dto.req.*;
+import com.join.event.bean.dto.res.UserHouseRes;
 import com.join.event.bean.dto.res.UserInfoRes;
 import com.join.event.bean.dto.res.UserPageRes;
+import com.join.event.bean.dto.res.UserPictureRes;
 import com.join.event.bean.entity.User;
 import com.join.event.bean.entity.UserPicture;
 import com.join.event.bean.enums.AuthorityEnum;
@@ -47,6 +46,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     UserPictureMapper userPictureMapper;
     @Resource
+    HouseServiceImpl houseService;
+    @Resource
     TransactionTemplate transactionTemplate;
 
     @Override
@@ -76,9 +77,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public UserPageRes myPage(UserPageReq userPageReq) {
         UserPageRes userPageRes = new UserPageRes();
 
+        //用户基础信息
         Long userId = userPageReq.getUserId();
         User user = userMapper.selectById(userId);
-        BeanUtil.copyProperties(user, userPageRes);
+        UserInfoRes userInfoRes = BeanUtil.copyProperties(user, UserInfoRes.class);
+        userPageRes.setUserInfoRes(userInfoRes);
+
+        //用户照片
+        LambdaQueryWrapper<UserPicture> userPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userPictureLambdaQueryWrapper.eq(UserPicture::getUserId, userId);
+        List<UserPicture> userPictures = userPictureMapper.selectList(userPictureLambdaQueryWrapper);
+        List<UserPictureRes> userPictureRes = BeanUtil.copyToList(userPictures, UserPictureRes.class);
+        userPageRes.setUserPictureResList(userPictureRes);
+
+        //用户活动
+        MyHouseReq myHouseReq = new MyHouseReq();
+        myHouseReq.setUserId(userId);
+        myHouseReq.setIsMyRoom(Boolean.TRUE);
+        List<UserHouseRes> userHouseRes = houseService.myAct(myHouseReq);
+        userPageRes.setUserHouseResList(userHouseRes);
+
         return userPageRes;
     }
 

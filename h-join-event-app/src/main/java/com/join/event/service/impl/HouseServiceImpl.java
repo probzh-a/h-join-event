@@ -2,10 +2,9 @@ package com.join.event.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.json.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.join.event.bean.dto.req.MyHouseReq;
-import com.join.event.bean.dto.res.MyHouseRes;
+import com.join.event.bean.dto.res.UserHouseRes;
 import com.join.event.bean.entity.House;
 import com.join.event.bean.entity.HouseUser;
 import com.join.event.bean.enums.ActStatusEnum;
@@ -38,18 +37,18 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
     private HouseUserMapper houseUserMapper;
 
     @Override
-    public List<MyHouseRes> myAct(MyHouseReq myHouseReq) {
+    public List<UserHouseRes> myAct(MyHouseReq myHouseReq) {
         Long userId = myHouseReq.getUserId();
         Boolean isMyRoom = myHouseReq.getIsMyRoom();
 
-        ArrayList<MyHouseRes> myHouseResArrayList = new ArrayList<>();
+        ArrayList<UserHouseRes> userHouseResArrayList = new ArrayList<>();
 
         LambdaQueryWrapper<HouseUser> houseUserWrapper = new LambdaQueryWrapper<>();
         houseUserWrapper.eq(HouseUser::getUserId, userId);
         List<HouseUser> houseUsers = houseUserMapper.selectList(houseUserWrapper);
         List<Long> houseIds = houseUsers.stream().map(HouseUser::getHouseId).distinct().collect(Collectors.toList());
         if (!isMyRoom && CollectionUtil.isEmpty(houseIds)) {
-            return myHouseResArrayList;
+            return userHouseResArrayList;
         }
         LambdaQueryWrapper<House> houseWrapper = new LambdaQueryWrapper<>();
         if (isMyRoom) {
@@ -59,27 +58,27 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
         }
         List<House> houses = houseMapper.selectList(houseWrapper);
         if (CollectionUtil.isNotEmpty(houses)) {
-            List<MyHouseRes> myHouseRes = BeanUtil.copyToList(houses, MyHouseRes.class);
-            myHouseResArrayList.addAll(myHouseRes);
+            List<UserHouseRes> userHouseRes = BeanUtil.copyToList(houses, UserHouseRes.class);
+            userHouseResArrayList.addAll(userHouseRes);
         }
-        if (CollectionUtil.isEmpty(myHouseResArrayList)) {
-            return myHouseResArrayList;
+        if (CollectionUtil.isEmpty(userHouseResArrayList)) {
+            return userHouseResArrayList;
         }
-        for (MyHouseRes myHouseRes : myHouseResArrayList) {
-            getActStatus(myHouseRes);
+        for (UserHouseRes userHouseRes : userHouseResArrayList) {
+            getActStatus(userHouseRes);
         }
-        return myHouseResArrayList;
+        return userHouseResArrayList;
     }
 
-    private static void getActStatus(MyHouseRes myHouseRes) {
-        LocalDateTime startTime = myHouseRes.getStartTime();
-        LocalDateTime endTime = myHouseRes.getEndTime();
+    private static void getActStatus(UserHouseRes userHouseRes) {
+        LocalDateTime startTime = userHouseRes.getStartTime();
+        LocalDateTime endTime = userHouseRes.getEndTime();
         if (LocalDateTime.now().isAfter(endTime)) {
-            myHouseRes.setActStatus(ActStatusEnum.END.getCode());
+            userHouseRes.setActStatus(ActStatusEnum.END.getCode());
         } else if (LocalDateTime.now().isBefore(startTime)) {
-            myHouseRes.setActStatus(ActStatusEnum.START.getCode());
+            userHouseRes.setActStatus(ActStatusEnum.START.getCode());
         } else {
-            myHouseRes.setActStatus(ActStatusEnum.IN.getCode());
+            userHouseRes.setActStatus(ActStatusEnum.IN.getCode());
         }
     }
 }

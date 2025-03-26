@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @ApiModel("用户活动列表")
-public class MyHouseRes {
+public class UserHouseRes {
 
     @ApiModelProperty("用户活动id")
     private Long id;
