@@ -41,4 +41,7 @@ public class UserUpdateReq {
     @ApiModelProperty(value = "用户照片列表")
     private List<UserPictureReq> userPictureReqs;
 
+    @ApiModelProperty("局头特殊信息(只有局头需要填写)")
+    private UserHeadReq userHeadReq;
+
 }

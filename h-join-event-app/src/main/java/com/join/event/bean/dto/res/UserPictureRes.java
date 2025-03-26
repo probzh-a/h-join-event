@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 public class UserPictureRes {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty("id")
     private Long id;
 
     @ApiModelProperty(value = "用户id")

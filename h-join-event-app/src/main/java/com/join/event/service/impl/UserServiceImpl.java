@@ -4,17 +4,16 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.join.event.bean.dto.req.*;
-import com.join.event.bean.dto.res.UserHouseRes;
-import com.join.event.bean.dto.res.UserInfoRes;
-import com.join.event.bean.dto.res.UserPageRes;
-import com.join.event.bean.dto.res.UserPictureRes;
+import com.join.event.bean.dto.res.*;
 import com.join.event.bean.entity.User;
+import com.join.event.bean.entity.UserHead;
 import com.join.event.bean.entity.UserPicture;
 import com.join.event.bean.enums.AuthorityEnum;
 import com.join.event.bean.enums.BaseStatusCodeEnum;
 import com.join.event.bean.enums.UserPictureTypeEnum;
 import com.join.event.config.exception.define.ServiceException;
 import com.join.event.config.idFactory.Idworker;
+import com.join.event.mapper.UserHeadMapper;
 import com.join.event.mapper.UserMapper;
 import com.join.event.mapper.UserPictureMapper;
 import com.join.event.service.IUserService;
@@ -26,6 +25,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,6 +47,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     UserPictureMapper userPictureMapper;
     @Resource
     HouseServiceImpl houseService;
+    @Resource
+    UserHeadMapper userHeadMapper;
     @Resource
     TransactionTemplate transactionTemplate;
 
@@ -83,9 +85,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         UserInfoRes userInfoRes = BeanUtil.copyProperties(user, UserInfoRes.class);
         userPageRes.setUserInfoRes(userInfoRes);
 
+        //用户局头信息
+        UserHeadRes userHeadRes = userIsHeadOrNo(userId);
+        if (null != userHeadRes) {
+            userPageRes.setUserHeadRes(userHeadRes);
+        }
+
         //用户照片
         LambdaQueryWrapper<UserPicture> userPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userPictureLambdaQueryWrapper.eq(UserPicture::getUserId, userId);
+        userPictureLambdaQueryWrapper.eq(UserPicture::getType, UserPictureTypeEnum.NORMAL.getCode());
         List<UserPicture> userPictures = userPictureMapper.selectList(userPictureLambdaQueryWrapper);
         List<UserPictureRes> userPictureRes = BeanUtil.copyToList(userPictures, UserPictureRes.class);
         userPageRes.setUserPictureResList(userPictureRes);
@@ -100,6 +109,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return userPageRes;
     }
 
+    public UserHeadRes userIsHeadOrNo(Long userId) {
+        UserHeadRes userHeadRes = new UserHeadRes();
+        LambdaQueryWrapper<UserHead> userHeadLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userHeadLambdaQueryWrapper.eq(UserHead::getUserId, userId);
+        List<UserHead> userHeads = userHeadMapper.selectList(userHeadLambdaQueryWrapper);
+        if (CollectionUtil.isNotEmpty(userHeads)) {
+            UserHead userHead = userHeads.stream().findFirst().orElse(null);
+            Long groundPicId = userHead.getGroundPicId();
+            if (null != groundPicId) {
+                UserPicture userPicture = userPictureMapper.selectById(groundPicId);
+                userHeadRes.setGroundPicUrl(userPicture.getPictureUrl());
+            }
+            BeanUtil.copyProperties(userHead, userHeadRes);
+            LambdaQueryWrapper<UserPicture> userPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            userPictureLambdaQueryWrapper.eq(UserPicture::getUserId, userHead);
+            userPictureLambdaQueryWrapper.eq(UserPicture::getType, UserPictureTypeEnum.HOME_PAGE.getCode());
+            List<UserPicture> userPictures = userPictureMapper.selectList(userPictureLambdaQueryWrapper);
+            if (CollectionUtil.isNotEmpty(userPictures)) {
+                userHeadRes.setHeadPictureResList(BeanUtil.copyToList(userPictures, UserPictureRes.class));
+            }
+            return userHeadRes;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUserInfo(UserUpdateReq userUpdateReq) {
@@ -110,6 +145,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         LambdaQueryWrapper<UserPicture> userPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userPictureLambdaQueryWrapper.eq(UserPicture::getUserId, userUpdateReq.getId());
+        userPictureLambdaQueryWrapper.in(UserPicture::getType, Arrays.asList(UserPictureTypeEnum.NORMAL.getCode(), UserPictureTypeEnum.AVATAR.getCode()));
         userPictureMapper.delete(userPictureLambdaQueryWrapper);
 
         List<UserPictureReq> userPictureReqs = userUpdateReq.getUserPictureReqs();
@@ -132,5 +168,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (CollectionUtil.isNotEmpty(userPicturesSave)) {
             userPictureMapper.batchInsert(userPicturesSave);
         }
+        //更改局头信息
+        if (null != userUpdateReq.getUserHeadReq()) {
+            UserHeadReq userHeadReq = userUpdateReq.getUserHeadReq();
+            UserHead userHead = BeanUtil.copyProperties(userHeadReq, UserHead.class);
+            userHead.setUpdatedTime(LocalDateTime.now());
+            userHeadMapper.updateById(userHead);
+
+            LambdaQueryWrapper<UserPicture> headPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            userPictureLambdaQueryWrapper.eq(UserPicture::getUserId, userUpdateReq.getId());
+            userPictureLambdaQueryWrapper.in(UserPicture::getType, UserPictureTypeEnum.HOME_PAGE.getCode());
+            userPictureMapper.delete(headPictureLambdaQueryWrapper);
+
+            List<UserPictureReq> headPictureResList = userHeadReq.getHeadPictureResList();
+            if (CollectionUtil.isNotEmpty(headPictureResList)) {
+                List<UserPicture> userPictures = BeanUtil.copyToList(headPictureResList, UserPicture.class);
+                userPictureMapper.batchInsert(userPictures);
+            }
+        }
+
     }
 }

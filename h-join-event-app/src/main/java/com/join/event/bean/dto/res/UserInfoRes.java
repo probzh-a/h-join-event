@@ -23,7 +23,7 @@ public class UserInfoRes {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty("id")
     private Long id;
 
     @ApiModelProperty(value = "用户微信登录唯一标识")
