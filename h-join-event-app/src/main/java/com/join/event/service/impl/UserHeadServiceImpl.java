@@ -1,9 +1,9 @@
 package com.join.event.service.impl;
 
-import com.join.event.entity.UserHead;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.join.event.bean.entity.UserHead;
 import com.join.event.mapper.UserHeadMapper;
 import com.join.event.service.IUserHeadService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

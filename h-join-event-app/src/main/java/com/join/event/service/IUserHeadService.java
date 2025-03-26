@@ -1,7 +1,8 @@
 package com.join.event.service;
 
-import com.join.event.entity.UserHead;
+
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.join.event.bean.entity.UserHead;
 
 /**
  * <p>
