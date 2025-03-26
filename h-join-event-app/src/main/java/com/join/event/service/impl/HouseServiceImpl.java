@@ -3,11 +3,16 @@ package com.join.event.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.join.event.bean.dto.req.MyHouseReq;
-import com.join.event.bean.dto.res.UserHouseRes;
+import com.join.event.bean.dto.req.house.CheckHouseNumReq;
+import com.join.event.bean.dto.req.house.CreateOrUpdateHouseReq;
+import com.join.event.bean.dto.req.house.MyHouseReq;
+import com.join.event.bean.dto.res.user.UserHouseRes;
+import com.join.event.bean.dto.res.user.UserPageRes;
 import com.join.event.bean.entity.House;
 import com.join.event.bean.entity.HouseUser;
 import com.join.event.bean.enums.ActStatusEnum;
+import com.join.event.bean.enums.BaseStatusCodeEnum;
+import com.join.event.config.exception.define.ServiceException;
 import com.join.event.mapper.HouseMapper;
 import com.join.event.mapper.HouseUserMapper;
 import com.join.event.service.IHouseService;
@@ -68,6 +73,24 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
             getActStatus(userHouseRes);
         }
         return userHouseResArrayList;
+    }
+
+    @Override
+    public void checkHouseNum(CheckHouseNumReq checkHouseNumReq) {
+        LambdaQueryWrapper<House> houseLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        houseLambdaQueryWrapper.eq(House::getNumber, checkHouseNumReq.getHouseNum());
+        houseLambdaQueryWrapper.ge(House::getStartTime, LocalDateTime.now());
+        Long count = houseMapper.selectCount(houseLambdaQueryWrapper);
+        if (count >= 0) {
+            throw new ServiceException(BaseStatusCodeEnum.B000004, "房间编号重复");
+        }
+    }
+
+    @Override
+    public void headCreateHouse(CreateOrUpdateHouseReq createOrUpdateHouseReq) {
+        House house = BeanUtil.copyProperties(createOrUpdateHouseReq, House.class);
+        house.setUpdatedTime(LocalDateTime.now());
+        this.saveOrUpdate(house);
     }
 
     private static void getActStatus(UserHouseRes userHouseRes) {

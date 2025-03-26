@@ -42,6 +42,9 @@ public class House implements Serializable {
     @ApiModelProperty(value = "房间名称")
     private String name;
 
+    @ApiModelProperty(value = "房间简介")
+    private String msg;
+
     @ApiModelProperty(value = "房间类型")
     private Integer type;
 

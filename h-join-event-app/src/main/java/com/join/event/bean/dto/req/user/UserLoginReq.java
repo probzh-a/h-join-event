@@ -1,4 +1,4 @@
-package com.join.event.bean.dto.req;
+package com.join.event.bean.dto.req.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

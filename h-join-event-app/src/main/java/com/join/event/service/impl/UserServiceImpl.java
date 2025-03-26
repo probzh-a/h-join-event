@@ -3,8 +3,9 @@ package com.join.event.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.join.event.bean.dto.req.*;
-import com.join.event.bean.dto.res.*;
+import com.join.event.bean.dto.req.house.MyHouseReq;
+import com.join.event.bean.dto.req.user.*;
+import com.join.event.bean.dto.res.user.*;
 import com.join.event.bean.entity.User;
 import com.join.event.bean.entity.UserHead;
 import com.join.event.bean.entity.UserPicture;
@@ -49,8 +50,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     HouseServiceImpl houseService;
     @Resource
     UserHeadMapper userHeadMapper;
-    @Resource
-    TransactionTemplate transactionTemplate;
 
     @Override
     public UserInfoRes login(UserLoginReq userLoginReq) {

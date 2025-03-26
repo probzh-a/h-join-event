@@ -1,11 +1,9 @@
-package com.join.event.bean.dto.req;
+package com.join.event.bean.dto.res.user;
 
-import com.join.event.bean.dto.res.UserPictureRes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -17,8 +15,8 @@ import java.util.List;
  * @since 2025/3/26
  */
 @Data
-@ApiModel
-public class UserHeadReq {
+@ApiModel("用户局头信息")
+public class UserHeadRes {
 
     @ApiModelProperty("id")
     private Long id;
@@ -41,9 +39,6 @@ public class UserHeadReq {
     @ApiModelProperty(value = "个人简介")
     private String summary;
 
-    @ApiModelProperty(value = "被点赞数量")
-    private Integer likeNum;
-
-    @ApiModelProperty("局头旗下头牌:只有局头才可以填写")
-    private List<UserPictureReq> headPictureResList;
+    @ApiModelProperty("局头旗下头牌:只有局头会返回")
+    private List<UserPictureRes> headPictureResList;
 }

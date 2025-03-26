@@ -1,4 +1,4 @@
-package com.join.event.bean.dto.res;
+package com.join.event.bean.dto.res.user;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

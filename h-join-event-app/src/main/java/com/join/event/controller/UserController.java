@@ -2,11 +2,11 @@ package com.join.event.controller;
 
 
 import com.join.event.bean.common.BaseResDto;
-import com.join.event.bean.dto.req.UserPageReq;
-import com.join.event.bean.dto.req.UserLoginReq;
-import com.join.event.bean.dto.req.UserUpdateReq;
-import com.join.event.bean.dto.res.UserInfoRes;
-import com.join.event.bean.dto.res.UserPageRes;
+import com.join.event.bean.dto.req.user.UserPageReq;
+import com.join.event.bean.dto.req.user.UserLoginReq;
+import com.join.event.bean.dto.req.user.UserUpdateReq;
+import com.join.event.bean.dto.res.user.UserInfoRes;
+import com.join.event.bean.dto.res.user.UserPageRes;
 import com.join.event.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
