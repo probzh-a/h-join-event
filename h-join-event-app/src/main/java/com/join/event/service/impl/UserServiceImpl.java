@@ -21,7 +21,6 @@ import com.join.event.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -85,7 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userPageRes.setUserInfoRes(userInfoRes);
 
         //用户局头信息
-        UserHeadRes userHeadRes = userIsHeadOrNo(userId);
+        UserHeaderRes userHeadRes = userIsHeadOrNo(userId);
         if (null != userHeadRes) {
             userPageRes.setUserHeadRes(userHeadRes);
         }
@@ -108,8 +107,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return userPageRes;
     }
 
-    public UserHeadRes userIsHeadOrNo(Long userId) {
-        UserHeadRes userHeadRes = new UserHeadRes();
+    public UserHeaderRes userIsHeadOrNo(Long userId) {
+        UserHeaderRes userHeadRes = new UserHeaderRes();
         LambdaQueryWrapper<UserHead> userHeadLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userHeadLambdaQueryWrapper.eq(UserHead::getUserId, userId);
         List<UserHead> userHeads = userHeadMapper.selectList(userHeadLambdaQueryWrapper);
@@ -168,9 +167,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userPictureMapper.batchInsert(userPicturesSave);
         }
         //更改局头信息
-        if (null != userUpdateReq.getUserHeadReq()) {
-            UserHeadReq userHeadReq = userUpdateReq.getUserHeadReq();
-            UserHead userHead = BeanUtil.copyProperties(userHeadReq, UserHead.class);
+        if (null != userUpdateReq.getUserHeaderReq()) {
+            UserHeaderReq userHeaderReq = userUpdateReq.getUserHeaderReq();
+            UserHead userHead = BeanUtil.copyProperties(userHeaderReq, UserHead.class);
             userHead.setUpdatedTime(LocalDateTime.now());
             userHeadMapper.updateById(userHead);
 
@@ -179,7 +178,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userPictureLambdaQueryWrapper.in(UserPicture::getType, UserPictureTypeEnum.HOME_PAGE.getCode());
             userPictureMapper.delete(headPictureLambdaQueryWrapper);
 
-            List<UserPictureReq> headPictureResList = userHeadReq.getHeadPictureResList();
+            List<UserPictureReq> headPictureResList = userHeaderReq.getHeadPictureResList();
             if (CollectionUtil.isNotEmpty(headPictureResList)) {
                 List<UserPicture> userPictures = BeanUtil.copyToList(headPictureResList, UserPicture.class);
                 userPictureMapper.batchInsert(userPictures);

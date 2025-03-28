@@ -22,7 +22,7 @@ public class UserPageRes {
     private UserInfoRes userInfoRes;
 
     @ApiModelProperty("用户局头信息:只有局头才会返回")
-    private UserHeadRes userHeadRes;
+    private UserHeaderRes userHeadRes;
 
     @ApiModelProperty("用户照片列表")
     private List<UserPictureRes> userPictureResList;

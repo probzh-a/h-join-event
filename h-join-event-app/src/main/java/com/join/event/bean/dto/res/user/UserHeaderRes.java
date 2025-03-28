@@ -1,4 +1,4 @@
-package com.join.event.bean.dto.req.user;
+package com.join.event.bean.dto.res.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,8 +15,8 @@ import java.util.List;
  * @since 2025/3/26
  */
 @Data
-@ApiModel
-public class UserHeadReq {
+@ApiModel("用户局头信息")
+public class UserHeaderRes {
 
     @ApiModelProperty("id")
     private Long id;
@@ -40,8 +40,8 @@ public class UserHeadReq {
     private String summary;
 
     @ApiModelProperty(value = "被点赞数量")
-    private Integer likeNum;
+    private Long likeNum;
 
-    @ApiModelProperty("局头旗下头牌:只有局头才可以填写")
-    private List<UserPictureReq> headPictureResList;
+    @ApiModelProperty("局头旗下头牌:只有局头会返回")
+    private List<UserPictureRes> headPictureResList;
 }

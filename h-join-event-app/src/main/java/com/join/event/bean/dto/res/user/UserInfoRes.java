@@ -77,19 +77,4 @@ public class UserInfoRes {
     @ApiModelProperty(value = "出生日期")
     private LocalDate birthday;
 
-    @ApiModelProperty(value = "创建人")
-    private Long createdUser;
-
-    @ApiModelProperty(value = "修改人")
-    private Long updatedUser;
-
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createdTime;
-
-    @ApiModelProperty(value = "修改时间")
-    private LocalDateTime updatedTime;
-
-    @ApiModelProperty(value = "是否删除：(1：已删除，0：未删除)")
-    private Boolean deleteStatus;
-
 }

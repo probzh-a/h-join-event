@@ -1,10 +1,15 @@
 package com.join.event.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.join.event.bean.dto.req.header.HeaderActReq;
+import com.join.event.bean.dto.req.header.HeaderHomePageReq;
 import com.join.event.bean.dto.req.house.CheckHouseNumReq;
 import com.join.event.bean.dto.req.house.CreateOrUpdateHouseReq;
 import com.join.event.bean.dto.req.house.MyHouseReq;
+import com.join.event.bean.dto.req.user.UserHomePageReq;
+import com.join.event.bean.dto.res.header.HeaderHomePageRes;
 import com.join.event.bean.dto.res.user.UserHouseRes;
-import com.join.event.bean.dto.res.user.UserPageRes;
+import com.join.event.bean.dto.res.house.UserHomePageRes;
 import com.join.event.bean.entity.House;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -25,4 +30,10 @@ public interface IHouseService extends IService<House> {
     void checkHouseNum(CheckHouseNumReq checkHouseNumReq);
 
     void headCreateHouse(CreateOrUpdateHouseReq createOrUpdateHouseReq);
+
+    IPage<UserHomePageRes> userHomePage(UserHomePageReq userHomePageReq);
+
+    List<UserHouseRes> headerAct(HeaderActReq headerActReq);
+
+    IPage<HeaderHomePageRes> headerHomePage(HeaderHomePageReq headerHomePageReq);
 }
