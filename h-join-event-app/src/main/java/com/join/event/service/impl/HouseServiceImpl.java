@@ -16,18 +16,14 @@ import com.join.event.bean.dto.res.user.InUserRes;
 import com.join.event.bean.dto.res.user.UserHouseRes;
 import com.join.event.bean.dto.res.house.UserHomePageRes;
 import com.join.event.bean.dto.res.user.UserInfoRes;
-import com.join.event.bean.entity.House;
-import com.join.event.bean.entity.HouseUser;
-import com.join.event.bean.entity.User;
-import com.join.event.bean.entity.UserHead;
+import com.join.event.bean.dto.res.user.UserPictureRes;
+import com.join.event.bean.entity.*;
 import com.join.event.bean.enums.ActStatusEnum;
 import com.join.event.bean.enums.AuthorityEnum;
 import com.join.event.bean.enums.BaseStatusCodeEnum;
+import com.join.event.bean.enums.UserPictureTypeEnum;
 import com.join.event.config.exception.define.ServiceException;
-import com.join.event.mapper.HouseMapper;
-import com.join.event.mapper.HouseUserMapper;
-import com.join.event.mapper.UserHeadMapper;
-import com.join.event.mapper.UserMapper;
+import com.join.event.mapper.*;
 import com.join.event.service.IHouseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -35,6 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -61,6 +58,8 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
     private UserHeadMapper userHeadMapper;
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private UserPictureMapper userPictureMapper;
 
     @Override
     public List<UserHouseRes> myAct(MyHouseReq myHouseReq) {
@@ -191,14 +190,26 @@ public class HouseServiceImpl extends ServiceImpl<HouseMapper, House> implements
         if (CollectionUtil.isEmpty(records)) {
             return result;
         }
+        List<Long> userIds = records.stream().map(User::getId).collect(Collectors.toList());
+        LambdaQueryWrapper<UserPicture> userPictureLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userPictureLambdaQueryWrapper.in(UserPicture::getUserId, userIds);
+        userPictureLambdaQueryWrapper.in(UserPicture::getType, Arrays.asList(UserPictureTypeEnum.AVATAR.getCode(), UserPictureTypeEnum.NORMAL.getCode()));
+        userPictureLambdaQueryWrapper.orderByAsc(UserPicture::getSort);
+        List<UserPicture> userPicturesList = userPictureMapper.selectList(userPictureLambdaQueryWrapper);
+        Map<Long, List<UserPicture>> userPicMap = userPicturesList.stream().collect(Collectors.groupingBy(UserPicture::getUserId));
         ArrayList<HeaderHomePageRes> headerHomePageResArrayList = new ArrayList<>();
         for (User record : records) {
             HeaderHomePageRes headerHomePageRes = new HeaderHomePageRes();
             UserInfoRes userInfoRes = BeanUtil.copyProperties(record, UserInfoRes.class);
             headerHomePageRes.setUserInfoRes(userInfoRes);
-
+            List<UserPicture> userPictures = userPicMap.get(record.getId());
+            List<UserPictureRes> userPictureRes = BeanUtil.copyToList(userPictures, UserPictureRes.class);
+            headerHomePageRes.setUserPictureResList(userPictureRes);
+            headerHomePageResArrayList.add(headerHomePageRes);
         }
-        return null;
+        result.setRecords(headerHomePageResArrayList);
+        result.setPages(pageList.getPages());
+        return result;
     }
 
     private static void getHouseInfo(House record,
